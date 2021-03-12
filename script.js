@@ -1,4 +1,4 @@
-'use strict';
+
 
 const filtersParent = document.querySelector('.filters');
 const filter = document.querySelectorAll('.filters input');
@@ -68,46 +68,52 @@ function changeImg() {
 }
 changeImg();
 
-function createCanvas(){
-    const img = new Image(); 
-    img.setAttribute('crossOrigin', 'anonymous');
-    img.src = mainImg.src; 
-    img.onload = function(){
-        const ctx = canvas.getContext("2d");
-        let filter = "";
-        let imgFilters = mainImg.style.cssText;
-        for(let i = 0; i < imgFilters.length; i++) {
-            if(imgFilters[i] === "-" && imgFilters[i-1] !== "e"){
-                continue;
-            } else {
-                switch(imgFilters[i]){
-                    case ":" : (filter = filter + "(");break;
-                    case ";" : (filter = filter + ")");break;
-                    default : (filter = filter + imgFilters[i]);
-                }
+function getFilter(){
+    let filter = "";
+    let imgFilters = mainImg.style.cssText;
+    for(let i = 0; i < imgFilters.length; i++) {
+        if(imgFilters[i] === "-" && imgFilters[i-1] !== "e"){
+            continue;
+        } else {
+            switch(imgFilters[i]){
+                case ":" : (filter = filter + "(");break;
+                case ";" : (filter = filter + ")");break;
+                default : (filter = filter + imgFilters[i]);
             }
         }
-        console.log(filter);
-        canvas.width = img.naturalWidth;
-        canvas.height = img.naturalHeight;
-        ctx.filter = filter;
-        ctx.drawImage(img, 0, 0);
-    };
+    }
+    return filter;
 }
 
-function saveImg() {
+function createCanvas(img){
+    const ctx = canvas.getContext("2d");
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    ctx.filter = getFilter();
+    ctx.drawImage(img, 0, 0);
+}
+
+function downloadImg(){
     btnSave.addEventListener('click', function(e) {
-        createCanvas();
-        setTimeout(function(){
-        var link = document.createElement('a');
-        link.download = 'photo-filter.jpg';
-        link.href = canvas.toDataURL();
-        link.click();
-        link.delete;
-        },10);
+        const req = new Promise((resolve, reject) => {
+            const img = new Image(); 
+            img.setAttribute('crossOrigin', 'anonymous');
+            img.src = mainImg.src; 
+            img.onload = function(){
+                createCanvas(img);
+                resolve();
+            };
+        });
+        req.then(function createLink(){
+            let link = document.createElement('a');
+            link.download = 'photo-filter.jpg';
+            link.href = canvas.toDataURL();
+            link.click();
+            link.delete;
+        });
     });
 }
-saveImg();
+downloadImg();
 
 function addFile() {
     const fileInput = document.getElementById('btnInput');

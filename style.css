@@ -180,11 +180,8 @@ img {
     sepia(var(--sepia, 0%)) saturate(var(--saturate, 100%))
     hue-rotate(var(--hue-rotate, 0deg));
 }
-
 canvas{
-  display: block;
-  position: absolute;
-  visibility: hidden;
+  display: none;
 }
 .fullscreen {
   position: fixed;
