@@ -39,7 +39,6 @@ function getNowTime() {
     (nowHours >= 18 && nowHours <=23)? nowTimesOfDay = 'evening':
     (nowHours >= 0 && nowHours <=5)? nowTimesOfDay = 'night': 
     alert('Error time of date!');
-
     return nowTimesOfDay;
 }
 
