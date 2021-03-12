@@ -134,7 +134,7 @@ function btnsActiveTarget(elem = btns[0]) {
         hideBtnActive();
         elem.classList.add('btn-active');
     }
-    if(!elem.matches('.btn')) {
+    if(elem.matches('.btn-load--input')) {
         hideBtnActive();
         elem.parentElement.classList.add('btn-active');
     }
